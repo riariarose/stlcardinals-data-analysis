@@ -19,7 +19,7 @@ def computation_of_players(batting, roster):
     Finds the top 12 players overall by combining the two dataframes and adding the total runs they have and games they have played
     """
     # combine the two dataframes
-    df = pd.merge(batting, roster, on='playerID')
+    df = pd.merge(batting, roster, left_index=True, right_on='playerID')
     # add the total runs and games they have played
     df['total_runs'] = df['R'] + df['H']
     df['total_games'] = df['G']
@@ -65,7 +65,7 @@ def main():
     # maria added the following 4 lines
     # you have to set the file name to the string. python doesn't work the way you originally had it
     team_batting_file = "team_batting.csv"
-    roster_file = "roster.csv"
+    roster_file = "full_roster.csv"
     batting = get_data(team_batting_file)
     roster = get_data(roster_file)
 
