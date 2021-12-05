@@ -1,7 +1,7 @@
 """
 Final Project: Cardinals
-
-Task 2: The top 6 best performing players per position based on game statistics
+Author: Zach Grasso
+Task 1: The top 12 players overall, and how they compare to the 12 players    listed on the dataset website (found by using a WAR score)
 
 """
 
@@ -12,51 +12,65 @@ import sklearn
 
 
 ###### Functions ######
-def get_top_performers(df, position):
+
+# find the top 12 players overall by combining the two dataframes and adding the total runs they have and games they have played
+def computation_of_players(batting, roster):
     """
-    Returns the top 6 players in the given position based on their game statistics using kmeans clustering from sklearn
+    Finds the top 12 players overall by combining the two dataframes and adding the total runs they have and games they have played
     """
-    # Select the data for the given position
-    df_pos = df[df['Position'] == position]
-    # Drop the position column
-    df_pos = df_pos.drop(['Position'], axis=1)
-    # Convert the dataframe to a numpy array
-    data = df_pos.values
-    # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(
-        data, data[:, 0], test_size=0.2, random_state=0)
-    # Create a kmeans model
-    model = sklearn.cluster.KMeans(n_clusters=6)
-    # Fit the model to the training data
-    model.fit(X_train)
-    # Predict the clusters for the test data
-    y_pred = model.predict(X_test)
-    # Create a dataframe from the predictions
-    df_pred = pd.DataFrame(y_pred, columns=['Cluster'])
-    # Join the predictions to the test data
-    df_pred = pd.concat([df_test, df_pred], axis=1)
-    # Create a list of the top 6 players in the given position
-    top_performers = []
-    for i in range(6):
-        top_performers.append(df_pred.loc[df_pred['Cluster'] == i].iloc[0, 0])
-    return top_performers
+    # combine the two dataframes
+    df = pd.merge(batting, roster, on='playerID')
+    # add the total runs and games they have played
+    df['total_runs'] = df['R'] + df['H']
+    df['total_games'] = df['G']
+    # sort the dataframe by the total runs and games they have played
+    df = df.sort_values(by=['total_runs', 'total_games'], ascending=False)
+    # return the top 12 players overall
+    return df
 
 
-def get_data():
+# Read CSV files
+def get_data(filename):
     """
     Reads in the data from the CSV file and returns a dataframe
     """
-    df = pd.read_csv('data/Zach_Data.csv')
+    df = pd.read_csv(filename)
     return df
+
+# check each top players of roster with war score to computed's top 12 players
+
+
+def check_top_players(roster, computed):
+    """
+    Checks each top players of roster with war score to computed's top 12 players
+    """
+    # get the top 12 players of the roster
+    top_players_roster = roster.sort_values(by=['war'], ascending=False)
+    # get the top 12 players of the computed dataframe
+    top_players_computed = computed.sort_values(
+        by=['total_runs', 'total_games'], ascending=False)
+    # check each top player of the roster with the war score
+    for i in range(1, 13):
+        print("Top Player of Roster: ", top_players_roster.iloc[i-1]['playerID'], " ", top_players_roster.iloc[i-1]['nameFirst'], " ",
+              top_players_roster.iloc[i-1]['nameLast'], " ", top_players_roster.iloc[i-1]['total_runs'], " ", top_players_roster.iloc[i-1]['total_games'])
+        print("Top Player of Computed: ", top_players_computed.iloc[i-1]['playerID'], " ", top_players_computed.iloc[i-1]['nameFirst'], " ",
+              top_players_computed.iloc[i-1]['nameLast'], " ", top_players_computed.iloc[i-1]['total_runs'], " ", top_players_computed.iloc[i-1]['total_games'])
+        print("")
 
 
 def main():
     """
     Main function
     """
-    df = get_data()
-    print(df.head())
-    print(get_top_performers(df, 'PG'))
+    # maria added the following 4 lines
+    # you have to set the file name to the string. python doesn't work the way you originally had it
+    team_batting_file = "team_batting.csv"
+    roster_file = "roster.csv"
+    batting = get_data(team_batting_file)
+    roster = get_data(roster_file)
+
+    computed = computation_of_players(batting, roster)
+    check_top_players(roster, computed)
 
 
 main()
