@@ -13,20 +13,30 @@ import sklearn
 
 ###### Functions ######
 
-# find the top 12 players overall by combining the two dataframes and adding the total runs they have and games they have played
+# find the top 12 players overall by combining the two dataframes and adding the total runs they have along with runs divided by games they have played
 def computation_of_players(batting, roster):
     """
     Finds the top 12 players overall by combining the two dataframes and adding the total runs they have and games they have played
     """
-    # combine the two dataframes
-    df = pd.merge(batting, roster, left_index=True, right_on='playerID')
-    # add the total runs and games they have played
-    df['total_runs'] = df['R'] + df['H']
-    df['total_games'] = df['G']
-    # sort the dataframe by the total runs and games they have played
-    df = df.sort_values(by=['total_runs', 'total_games'], ascending=False)
-    # return the top 12 players overall
-    return df
+    # combine the two dataframes on playerID
+    df = pd.merge(batting, roster, on='Name')
+    # append a new column called calculated
+    df['calculated'] = 0
+
+    # for each player in dataframe, add the Runs and Hits they have and divide by the games they have played
+    for i in range(len(df)):
+        num = df.iloc[i]['Runs'] + \
+            df.iloc[i]['Hits'] / df.iloc[i]['Games']
+        print(num)
+        df.iloc[i]['calculated'] = num
+
+    # create a dataframe with the name and calculated value for top 12 players of calculated
+    print(df.head(12))
+    computed = df.sort_values(by=['calculated'], ascending=False)
+    computed = computed[['Name', 'calculated', 'WAR']]
+    print(computed.head(12))
+
+    return computed
 
 
 # Read CSV files
@@ -42,20 +52,19 @@ def get_data(filename):
 
 def check_top_players(roster, computed):
     """
-    Checks each top players of roster with war score to computed's top 12 players
+    Checks each top players of roster with war score to computed's top 12 players (war score is calculated through a complicated equation but only measures the players during a winning game)
     """
     # get the top 12 players of the roster
-    top_players_roster = roster.sort_values(by=['war'], ascending=False)
+    top_players_roster = roster.sort_values(by=['WAR'], ascending=False)
     # get the top 12 players of the computed dataframe
     top_players_computed = computed.sort_values(
-        by=['total_runs', 'total_games'], ascending=False)
+        by=['calculated'], ascending=False)
     # check each top player of the roster with the war score
     for i in range(1, 13):
-        print("Top Player of Roster: ", top_players_roster.iloc[i-1]['playerID'], " ", top_players_roster.iloc[i-1]['nameFirst'], " ",
-              top_players_roster.iloc[i-1]['nameLast'], " ", top_players_roster.iloc[i-1]['total_runs'], " ", top_players_roster.iloc[i-1]['total_games'])
-        print("Top Player of Computed: ", top_players_computed.iloc[i-1]['playerID'], " ", top_players_computed.iloc[i-1]['nameFirst'], " ",
-              top_players_computed.iloc[i-1]['nameLast'], " ", top_players_computed.iloc[i-1]['total_runs'], " ", top_players_computed.iloc[i-1]['total_games'])
-        print("")
+        print(top_players_roster.iloc[i]['Name']
+              == top_players_computed.iloc[i]['Name'])
+        print(top_players_roster.iloc[i]['Name'],
+              top_players_computed.iloc[i]['Name'])
 
 
 def main():
