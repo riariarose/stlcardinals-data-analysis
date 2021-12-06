@@ -1,0 +1,53 @@
+Column definitions for team_batting.csv: 
+Rank,Position,Name,Age,Games,PA,AB,Runs,Hits,2B,3B,HR,RBI,SB,CS,BB,SO,BA,OBP,SLG,OPS,OPS+,TB,GDP,HBP,SH,SF,IBB
+PA = plate appearanches
+AB = at bats
+R = runs scored/allowed
+H = hits/hits allowed
+2B = Doubles Hits/alllowed
+3B = Triple hits/allowed
+HR = homeruns hit/allowed
+RBI = runs batted in
+SB = stolen bases
+CS = caught stealing
+BB = bases on balls (aka walks)
+SO = strikeouts
+BA = hits/at bats
+OBP
+SLG
+OPS
+OPS+
+TB = total bases
+GDP = double plays grounded intro
+HBP = hits by pitch
+SH = sacraficed hits (aka sacrafice bunts)
+SF = sacrificed flies
+IBB = intentional bases on balls
+
+Column definitions for full_roster.csv: 
+Name,Age,Country,B,T,Ht,Wt,DoB,Yrs,G,GS,Batting,Defense,P,C,1B,2B,3B,SS,LF,CF,RF,OF,DH,PH,PR,WAR,Status
+B = batting side (L for left, R for right)
+T = throwing hand (L for left, R for right)
+Ht = height
+Wt = weight
+DoB = date of birth
+Yrs = number of years in the major leagues
+G = all games played
+GS = games started
+Batting = games appeared in batting order (but may not have batted)
+Defense = games in lineup at a defensive position 
+P = games in lineup as a pitcher
+C = games in lineup as a cather
+1B = games in lineup as 1st baseman
+2B = games in lineup as 2nd baseman
+3B = games in lineup as 3rd baseman
+SS = games in lineup as shortstop
+LF = games in lineup as left fielder
+CF = games in lineup as center fielder
+RF = games in lineup as right fielder
+OF = games in lineup as outfielder
+DH = games in lineup as a designatd hitter
+PH = games in lineup as a pinch hitter
+PR = games in lineup as a pinch runner
+WAR = total calculated score to find the top 12 players 
+Status = whether the player was in the All Star games
