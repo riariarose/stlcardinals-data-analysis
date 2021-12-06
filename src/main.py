@@ -66,20 +66,25 @@ def check_top_players(roster, computed):
         print(top_players_roster.iloc[i]['Name'],
               top_players_computed.iloc[i]['Name'])
 
+# use KNN algorithm to find the best players from sklearn
 
-def main():
+
+def knn_algorithm(df):
     """
-    Main function
+    Uses KNN algorithm to find the best players from sklearn
     """
-    # maria added the following 4 lines
-    # you have to set the file name to the string. python doesn't work the way you originally had it
-    team_batting_file = "team_batting.csv"
-    roster_file = "full_roster.csv"
-    batting = get_data(team_batting_file)
-    roster = get_data(roster_file)
-
-    computed = computation_of_players(batting, roster)
-    check_top_players(roster, computed)
-
-
-main()
+    # split the dataframe into two dataframes
+    X = df.drop(['Name', 'calculated', 'WAR'], axis=1)
+    y = df['calculated']
+    # split the data into training and testing data
+    X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(
+        X, y, test_size=0.2)
+    # create a KNN model
+    knn = sklearn.neighbors.KNeighborsClassifier()
+    # train the model
+    knn.fit(X_train, y_train)
+    # predict the model
+    predictions = knn.predict(X_test)
+    # calculate the accuracy of the model
+    accuracy = sklearn.metrics.accuracy_score(y_test, predictions)
+    print(accuracy)
