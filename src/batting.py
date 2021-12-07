@@ -19,7 +19,6 @@ def preprocess_batting(df):
     # batting = df.drop(['Country', 'Ht', 'Wt', 'DoB', 'Yrs', 'WAR', 'Status'], axis=1)
     ranks = pd.DataFrame(df.iloc[:, 0:4])
     data = pd.DataFrame(df.iloc[:, 2:])
-
     return 0
 
 def main():
